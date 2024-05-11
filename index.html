@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PMD Sheet</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="summary">
+            <div class="nameSpace">
+                    <label for="name" class="leftLabel">Name:</label>
+                    <input type="text" name="attr_character_name" class="textFieldBorderless" placeholder="Pikachu" id="name">
+            </div>
+            <div class="background">
+                <div class="miniContainer">
+                    <div>
+                        <label for="lvl" class="leftLabel">Lvl:</label>
+                        <input type="number" name="attr_lvl" min="1" max="100" class="textFieldBorderless" value="1" id="lvl">
+                    </div>
+                    <div>
+                        <label for="nature" class="leftLabel">Nature:</label>
+                        <select name="attr_nature" class="textFieldBorderless" id="nature">
+                        <!--ATK BOOST-->
+                        <option value="adamant">Adamant (Atk+ | Sp.Atk-)</option>
+                        <option value="brave">Brave (Atk+ | Speed-)</option>
+                        <option value="lonely">Lonely (Atk+ | Def-)</option>
+                        <option value="naughty">Naughty (Atk+ | Sp.Def-)</option>
+                        <!--SP.ATK BOOST-->
+                        <option value="modest">Modest (Sp.Atk+ | Atk-)</option>
+                        <option value="quiet">Quiet (Sp.Atk+ | Speed-)</option>
+                        <option value="mild">Mild (Sp.Atk+ | Def-)</option>
+                        <option value="rash">Rash (Sp.Atk+ | Sp.Def-)</option>
+                        <!--SPEED BOOST-->
+                        <option value="timid">Timid (Speed+ | Atk-)</option>
+                        <option value="jolly">Jolly (Speed+ | Sp.Atk-)</option>
+                        <option value="hasty">Hasty (Speed+ | Def-)</option>
+                        <option value="naive">Naive (Speed+ | Sp.Def-)</option>
+                        <!--DEF BOOST-->
+                        <option value="bold">Bold (Def+ | Atk-)</option>
+                        <option value="impish">Impish (Def+ | Sp.Atk-)</option>
+                        <option value="relaxed">Relaxed (Def+ | Speed-)</option>
+                        <option value="lax">Lax (Def+ | Sp.Def-)</option>
+                        <!--SP.DEF BOOST-->
+                        <option value="calm">Calm (Sp.Def+ | Atk-)</option>
+                        <option value="careful">Careful (Sp.Def+ | Sp.Atk-)</option>
+                        <option value="sassy">Sassy (Sp.Def+ | Speed-)</option>
+                        <option value="gentle">Gentle (Sp.Def+ | Def-)</option>
+                    </select>
+                    </div>
+                </div>
+                <div class="miniContainer">
+                    <div>
+                        <label for="species" class="leftLabel">Species:</label>
+                        <input type="text" name="attr_species" class="textFieldBorderless" placeholder="Species" id="species">
+                    </div>
+                    <div>
+                        <label for="nature" class="leftLabel">Alignment:</label>
+                        <select class="textFieldBorderless" id="nature">
+                            <option value="lg">Lawful Good</option>
+                            <option value="ng">Neutral Good</option>
+                            <option value="cg">Chaotic Good</option>
+                            <option value="ln">Lawful Neutral</option>
+                            <option value="tn">True Neutral</option>
+                            <option value="cn">Chaotic Neutral</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="ev" class="leftLabel">EVs:</label>
+                        <input type="number" name="attr_evs" class="textFieldBorderless" placeholder="EVs" id="ev" value="0">
+                    </div>    
+            </div>
+        </div>
+    </div>
+</body>
+</html>
