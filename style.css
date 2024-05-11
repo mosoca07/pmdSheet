@@ -1,0 +1,65 @@
+:root{
+    /*STATS COLORS*/
+    --hpColor:#69DC12;
+    --atkColor:#EFCC18;
+    --defColor:#E86412;
+    --spAtkColor:#14C3F1;
+    --spDefColor:#4A6ADF;
+    --speedColor:#D51DAD;
+    /*POKEDEX PALETTE*/
+    --blueDex: #28414f;
+    --redDex: #C80A28;
+    --lightGrayDex: #D8D7D4;
+    --grayDex: #797C7C;
+}
+
+.container{
+    width: 794px;
+    height: 100vh;
+}
+
+.summary{
+    background-color: #dc0a2d;
+    width: 794px;
+    height: 110px;
+}
+
+.nameSpace{
+    width: 257px;
+    height: 50px;
+    margin-left: 3px;
+    margin-top: 10px;
+    float: left;
+}
+
+.background{
+    margin-top: 10px;
+    width: 534px;
+    height: 100px;
+    float: left;
+}
+
+.miniContainer{
+    height: 45px;
+    width: 524px;
+    display: flex;
+    margin-right: 10px;
+    justify-content: space-around;
+}
+
+.leftLabel{
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    margin-right: 3px;
+    color: white;
+}
+
+.textFieldBorderless{
+    border:none;
+    background-color: #83acd2;
+    border-radius: 5px;
+    box-shadow: 5px 5px 10px 2px rgba(0, 0, 0, .8);
+}
+
+input[type="text"],input[type="number"],select{
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+}
