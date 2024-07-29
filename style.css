@@ -13,53 +13,274 @@
     --grayDex: #797C7C;
 }
 
-.container{
-    width: 794px;
-    height: 100vh;
+.ui-dialog .charsheet button[type=roll]:before{
+    content: none;
 }
 
-.summary{
-    background-color: #dc0a2d;
+.ui-dialog .charsheet button[type=roll]:hover{
+    text-decoration: underline;
+}
+
+.ui-dialog .charsheet button[type=roll]:on-click{
+    
+}
+
+.ui-dialog .charsheet button[type="roll"]{
+  all: initial;
+  cursor: pointer;
+  
+  padding-left: 5px;
+}
+
+.charsheet .lvlButton{
+    background-color: var(--blueDex);
+    border-radius: 5px;
+    text-align: center;
+    border-style: outset;
+    border-color: var(--lightGrayDex);
+}
+
+.charsheet .container{
+    width: 794px;
+    height: 1000px;
+    background-color: rbga(0,0,0,0.3);
+    /*overflow: scroll;*/
+    overflow-x: hidden;
+}
+
+.charsheet .summary{
     width: 794px;
     height: 110px;
+    background-color: var(--redDex);
+    color: var(--lightGrayDex);
 }
 
-.nameSpace{
-    width: 257px;
-    height: 50px;
-    margin-left: 3px;
-    margin-top: 10px;
-    float: left;
-}
-
-.background{
-    margin-top: 10px;
-    width: 534px;
-    height: 100px;
-    float: left;
-}
-
-.miniContainer{
-    height: 45px;
-    width: 524px;
+.charsheet .miniConSE{
+    padding: 5px;
     display: flex;
-    margin-right: 10px;
-    justify-content: space-around;
+    justify-content: space-evenly;
 }
 
-.leftLabel{
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    margin-right: 3px;
-    color: white;
+.charsheet .miniConFE{
+    padding: 5px;
+    display: flex;
+    justify-content: flex-end;
 }
 
-.textFieldBorderless{
-    border:none;
-    background-color: #83acd2;
+.charsheet .inputSummary{
+    background-color: var(--blueDex);
+    color:var(--lightGrayDex);
+}
+
+.charsheet .objContainer{
+    padding: 5px;
+}
+
+.charsheet .statsContainer{
+    height: 589px;
+    width: 70px;
+    background-color: var(--redDex);
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+}
+
+.charsheet .statBox{
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--blueDex);
+    height: 74px;
+    padding: 5px;
+    color: var(--lightGrayDex);
     border-radius: 5px;
-    box-shadow: 5px 5px 10px 2px rgba(0, 0, 0, .8);
+    font-weight: bolder;
+    border-style: outset;
+    border-color: var(--lightGrayDex);
+    margin: 5px;
 }
 
-input[type="text"],input[type="number"],select{
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+.charsheet .stat{
+    width: 52px;
+    height: 44px;
+    text-align: center;
+    border: none;
+    border-radius: 0%;
+    color: black;
+    font-weight: bolder;
+}
+
+.charsheet .pokemonContainer{
+    height: 589px;
+    width: 794px;
+    display: inline-flex;
+
+}
+
+.charsheet .containerAbout{
+    height: 589px;
+    width: 724px;
+    margin: 5px;
+}
+
+.charsheet .containerResources{
+    height: 147px;
+    width: 690px;
+    background-color: var(--blueDex);
+    display: inline-flex;
+    justify-content: space-evenly;
+    border-style: outset;
+    border-radius: 5px;
+    border-color: var(--lightGrayDex);
+}
+
+/*SKILL SECTION*/
+.charsheet .containerSkillAction{
+    width: 180px;
+    height: 660px;
+    border: 10px solid transparent;
+    border-image: url("https://raw.githubusercontent.com/mosoca07/pmdSheet/main/yCard.jpeg") 30% round;
+    background-image: url("https://raw.githubusercontent.com/mosoca07/pmdSheet/main/cardboard.png");
+    border-style: outset;
+    border-color: var(--lightGrayDex);
+    border-radius: 5px;
+    background-color: var(--blueDex);
+    margin: 5px;
+    padding: 1%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.charsheet .skillButton{
+    color: #211a12 !important;
+    font-weight: 750 !important;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif !important;
+    border-style: dotted !important;
+    border-color: rgba(97,69,38,0.7) !important;
+    color: #211a12 !important;  
+}
+/*SKILL SECTION*/
+
+.charsheet .mainContainer{
+    width: 450px;
+    margin: 5px;
+    border: 10px solid transparent;
+    padding: 15px;
+    border-image: url("https://raw.githubusercontent.com/mosoca07/pmdSheet/main/yCard.jpeg") 30% round;
+    background-image: url("https://raw.githubusercontent.com/mosoca07/pmdSheet/main/cardboard.png");
+}
+
+/*ATTACKS SECTION*/
+.charsheet .attacksContainer{
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.charsheet .attack{
+    margin: 1%;
+    width: 46%;
+    font-weight: 900;
+    border-style: dotted;
+    border-color: rgba(97,69,38,0.7);
+    color: #211a12;
+}
+
+.charsheet .inputAttack{
+    border: none;
+    background-color: rgba(33,26,18,0.5);
+    color: #ffffff;
+    margin: 1px;
+}
+
+.charsheet .attkBtn{
+    color: #211a12 !important;
+    font-weight: 900 !important;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif !important;
+
+}
+/*ATTACKS SECTION*/
+
+.charsheet .flexContainerInLine{
+    display: inline-flex;
+}
+
+.charsheet .resourcesBox{
+    background-color: var(--redDex);
+    padding: 5px;
+    text-align: center;
+    border-radius: 5px;
+    margin: 5px;
+    border-style: outset;
+    border-color: var(--lightGrayDex);
+}
+
+.charsheet .defendContainer{
+    background-color: var(--blueDex);
+}
+
+.charsheet .conditionContainer{
+    background-color: var(--atkColor);
+}
+
+.charsheet .hpView{
+    color: var(--lightGrayDex);
+    margin: 5px;
+    font-weight: bolder;
+}
+
+.charsheet .inputSummaryHP{
+    background-color: var(--redDex);
+    color:var(--lightGrayDex);
+    border: none;
+    width: 50px;
+    text-align: center;
+}
+
+.charsheet .defendContainer{
+    color: var(--lightGrayDex);
+    border-radius: 5px;
+    border-color: var(--lightGrayDex);
+    border-style: outset;
+    width: 110px;
+    height: 68px;
+    padding-right: 12px !important;
+    padding-bottom: 8px !important;
+}
+
+.charsheet .defendIcon{
+    color: var(--redDex) !important;
+    display: inline-flex;
+    align-items: center;
+    font-weight: bolder;
+    font-size: 50px;
+}
+
+.charsheet .conditionsBox{
+    display: flex;
+    flex-direction: column;
+    
+}
+
+.charsheet .statusBox{
+    display: flex;
+    justify-content: flex-start;
+}
+
+.charsheet .flexColumn{
+    display: flex;
+    flex-direction: column;
+    background-color: var(--redDex);
+    padding: 5px;
+    border-radius: 5px;
+    margin: 5px;
+    border-style: outset;
+    border-color: var(--lightGrayDex);
+    width: 100px;
+}
+
+.charsheet .tummy{
+    margin: 5px;
 }
