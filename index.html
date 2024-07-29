@@ -1,77 +1,454 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PMD Sheet</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="container">
-        <div class="summary">
-            <div class="nameSpace">
-                    <label for="name" class="leftLabel">Name:</label>
-                    <input type="text" name="attr_character_name" class="textFieldBorderless" placeholder="Pikachu" id="name">
+<script type="text/worker">
+    /*Level up*/
+    on("clicked:lvlUp", function() {
+        getAttrs(['lvl'], function(values){
+            let newLvl = (parseInt(values.lvl)||0);
+            if(newLvl<100)
+                newLvl++;
+            setAttrs({ 
+                lvl: newLvl
+            });
+        });
+        setMaxHP();
+        setFinalAtk();
+    });
+
+    on("clicked:test", function() {
+    });
+
+    on("sheet:opened", function() {
+        setMaxHP();
+    });
+
+    function setMaxHP(){
+        getAttrs(['baseHP','evHP','lvl','totalHP'],function(values){
+            let base = parseInt(values.baseHP)||0;
+            let ev = parseInt(values.evHP)||0;
+            let lvl = parseInt(values.lvl)||0;
+            /*
+            FORMULA IS:
+            ((2*BaseStat+IV+(EV/4)*Lvl)/100)+Level+10
+            Where:
+            BaseStat: Are an attr
+            IV: Are not consider in this sheet, so I use the max 31 for everyone
+            EV: Values earned by defeating Pokemon, to make it less complex, using
+            the list of EVs of defeting a Pokemon granting that amount of EVs,
+            but not assigning them to the specifics stats, characters will distribute them as desired
+            Lvl: Is the attr Level
+            */
+            let finalHP = parseInt((((2*base+31+(ev/4))*lvl)/100)+lvl+10)||0;
+            setAttrs({
+                totalHP: finalHP
+            });
+        });
+    };
+
+    function setFinalAtk(){
+        getAttrs(['baseAtk','evAtk','finalAtk','lvl','nature'],function(values){
+            let base = parseInt(values.baseAtk)||0;
+            let ev = parseInt(values.evAtk)||0;
+            let level = parseInt(values.lvl)||0;
+            let flagPos = values.nature==="adamant" || values.nature==="brave" || values.nature==="lonely" || values.nature==="naughty" ? true : false;
+            let flagNeg = false;
+            let result = 0;
+            if(!flagPos){
+                flagNeg = values.nature==="bold" || values.nature==="modest" || values.nature==="calm" || values.nature==="timid" ? true : false;
+            }
+            result = (((2*base+31+(ev/4))*level)/100)+5;
+            if(flagPos){
+                result = result*1.1;
+            } else if (flagNeg){
+                result = result*0.9;
+            }
+            setAttrs({
+                finalAtk: (parseInt(result))
+            });
+        });
+    }
+
+
+</script>
+
+<div class="container">
+    <div class="summary">
+        <div class="miniConSE">
+            <div class="objContainer">
+                <span style="font-weight: bolder;">Name:</span>
+                <input type="text" name="attr_character_name" class="inputSummary">
             </div>
-            <div class="background">
-                <div class="miniContainer">
-                    <div>
-                        <label for="lvl" class="leftLabel">Lvl:</label>
-                        <input type="number" name="attr_lvl" min="1" max="100" class="textFieldBorderless" value="1" id="lvl">
-                    </div>
-                    <div>
-                        <label for="nature" class="leftLabel">Nature:</label>
-                        <select name="attr_nature" class="textFieldBorderless" id="nature">
-                        <!--ATK BOOST-->
-                        <option value="adamant">Adamant (Atk+ | Sp.Atk-)</option>
-                        <option value="brave">Brave (Atk+ | Speed-)</option>
-                        <option value="lonely">Lonely (Atk+ | Def-)</option>
-                        <option value="naughty">Naughty (Atk+ | Sp.Def-)</option>
-                        <!--SP.ATK BOOST-->
-                        <option value="modest">Modest (Sp.Atk+ | Atk-)</option>
-                        <option value="quiet">Quiet (Sp.Atk+ | Speed-)</option>
-                        <option value="mild">Mild (Sp.Atk+ | Def-)</option>
-                        <option value="rash">Rash (Sp.Atk+ | Sp.Def-)</option>
-                        <!--SPEED BOOST-->
-                        <option value="timid">Timid (Speed+ | Atk-)</option>
-                        <option value="jolly">Jolly (Speed+ | Sp.Atk-)</option>
-                        <option value="hasty">Hasty (Speed+ | Def-)</option>
-                        <option value="naive">Naive (Speed+ | Sp.Def-)</option>
-                        <!--DEF BOOST-->
-                        <option value="bold">Bold (Def+ | Atk-)</option>
-                        <option value="impish">Impish (Def+ | Sp.Atk-)</option>
-                        <option value="relaxed">Relaxed (Def+ | Speed-)</option>
-                        <option value="lax">Lax (Def+ | Sp.Def-)</option>
-                        <!--SP.DEF BOOST-->
-                        <option value="calm">Calm (Sp.Def+ | Atk-)</option>
-                        <option value="careful">Careful (Sp.Def+ | Sp.Atk-)</option>
-                        <option value="sassy">Sassy (Sp.Def+ | Speed-)</option>
-                        <option value="gentle">Gentle (Sp.Def+ | Def-)</option>
-                    </select>
-                    </div>
-                </div>
-                <div class="miniContainer">
-                    <div>
-                        <label for="species" class="leftLabel">Species:</label>
-                        <input type="text" name="attr_species" class="textFieldBorderless" placeholder="Species" id="species">
-                    </div>
-                    <div>
-                        <label for="nature" class="leftLabel">Alignment:</label>
-                        <select class="textFieldBorderless" id="nature">
-                            <option value="lg">Lawful Good</option>
-                            <option value="ng">Neutral Good</option>
-                            <option value="cg">Chaotic Good</option>
-                            <option value="ln">Lawful Neutral</option>
-                            <option value="tn">True Neutral</option>
-                            <option value="cn">Chaotic Neutral</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="ev" class="leftLabel">EVs:</label>
-                        <input type="number" name="attr_evs" class="textFieldBorderless" placeholder="EVs" id="ev" value="0">
-                    </div>    
+            <div class="objContainer">
+                <span style="font-weight: bolder;">Lvl:</span>
+                <input type="hidden" name="attr_lvl" value="0" max="100">
+                <span name="attr_lvl" style="font-weight: bolder;"></span>
+                <button type="action" class="lvlButton" name="act_lvlUp" >&#8657;</button>
+            </div>
+            <div class="objContainer">
+                <span style="font-weight: bolder;">Nature:</span>
+                <select name="attr_nature" class="inputSummary">
+                    <!--ATK BOOST-->
+                    <option value="adamant">Adamant (Atk+ | Sp.Atk-)</option>
+                    <option value="brave">Brave (Atk+ | Speed-)</option>
+                    <option value="lonely">Lonely (Atk+ | Def-)</option>
+                    <option value="naughty">Naughty (Atk+ | Sp.Def-)</option>
+                    <!--SP.ATK BOOST-->
+                    <option value="modest">Modest (Sp.Atk+ | Atk-)</option>
+                    <option value="quiet">Quiet (Sp.Atk+ | Speed-)</option>
+                    <option value="mild">Mild (Sp.Atk+ | Def-)</option>
+                    <option value="rash">Rash (Sp.Atk+ | Sp.Def-)</option>
+                    <!--SPEED BOOST-->
+                    <option value="timid">Timid (Speed+ | Atk-)</option>
+                    <option value="jolly">Jolly (Speed+ | Sp.Atk-)</option>
+                    <option value="hasty">Hasty (Speed+ | Def-)</option>
+                    <option value="naive">Naive (Speed+ | Sp.Def-)</option>
+                    <!--DEF BOOST-->
+                    <option value="bold">Bold (Def+ | Atk-)</option>
+                    <option value="impish">Impish (Def+ | Sp.Atk-)</option>
+                    <option value="relaxed">Relaxed (Def+ | Speed-)</option>
+                    <option value="lax">Lax (Def+ | Sp.Def-)</option>
+                    <!--SP.DEF BOOST-->
+                    <option value="calm">Calm (Sp.Def+ | Atk-)</option>
+                    <option value="careful">Careful (Sp.Def+ | Sp.Atk-)</option>
+                    <option value="sassy">Sassy (Sp.Def+ | Speed-)</option>
+                    <option value="gentle">Gentle (Sp.Def+ | Def-)</option>
+                    <!--NEUTRAL-->
+                    <option value="hardy">Hardy</option>
+                    <option value="docile">Docile</option>
+                    <option value="bashful">Bashful</option>
+                    <option value="quirky">Quirky</option>
+                    <option value="serious">Serious</option>
+                </select>
+            </div>
+        </div>
+        <div class="miniConFE">
+            <div class="objContainer">
+                <span style="font-weight: bolder;">Species:</span>
+                <input type="text" name="attr_Species" placeholder="Pikachu" class="inputSummary">
+            </div>
+            <div class="objContainer">
+                <span style="font-weight: bolder;">Alignment:</span>
+                <select class="inputSummary" name="attr_Alignment">
+                    <option value="lg">Lawful Good</option>
+                    <option value="ng">Neutral Good</option>
+                    <option value="cg">Chaotic Good</option>
+                    <option value="ln">Lawful Neutral</option>
+                    <option value="tn">True Neutral</option>
+                    <option value="cn">Chaotic Neutral</option>
+                </select>
+            </div>
+            <div class="objContainer">
+                <span style="font-weight: bolder;">EVs:</span>
+                <input type="number" name="attr_evs" class="inputSummary" value="0" max="510">
             </div>
         </div>
     </div>
-</body>
-</html>
+    <div class="pokemonContainer">
+        <div class="statsContainer">
+            <div class="statBox">
+                <span>HP</span>
+                <input type="text" name="attr_baseHP" value="35" class="stat" style="background-color: #69DC12;">
+                <input type="text" name="attr_evHP" value="0" class="stat" style="background-color: #69DC12;">
+                <input type="hidden" name="attr_finalHP" value="0">
+            </div>
+            <div class="statBox">
+                <span>Attack</span>
+                <input type="text" name="attr_baseAtk" value="55" class="stat" style="background-color: #EFCC18;">
+                <input type="text" name="attr_evAtk" value="0" class="stat" style="background-color: #EFCC18;">
+                <input type="hidden" name="attr_finalAtk" value="0">
+            </div>
+            <div class="statBox">
+                <span>Defense</span>
+                <input type="text" name="attr_baseDef" value="40" class="stat" style="background-color: #E86412;">
+                <input type="text" name="attr_evDef" value="0" class="stat" style="background-color: #E86412;">
+                <input type="hidden" name="attr_finalDef" value="0">
+            </div>
+            <div class="statBox">
+                <span>Sp.Atk</span>
+                <input type="text" name="attr_baseSpAtk" value="50" class="stat" style="background-color: #14C3F1;">
+                <input type="text" name="attr_evSpAtk" value="0" class="stat" style="background-color: #14C3F1;">
+                <input type="hidden" name="attr_finalSpAtk" value="0">
+            </div>
+            <div class="statBox">
+                <span>SP.Def</span>
+                <input type="text" name="attr_baseSpDef" value="50" class="stat" style="background-color: #4A6ADF;">
+                <input type="text" name="attr_evSpDef" value="0" class="stat" style="background-color: #4A6ADF;">
+                <input type="hidden" name="attr_finalSpDef" value="0">
+            </div>
+            <div class="statBox">
+                <span>Speed</span>
+                <input type="text" name="attr_baseSpe" value="35" class="stat" style="background-color: #D51DAD;">
+                <input type="text" name="attr_evSpe" value="0" class="stat" style="background-color: #D51DAD;">
+                <input type="hidden" name="attr_finalSpe" value="0">
+            </div>
+        </div>
+        <div class="containerAbout">
+            <div class="containerResources">
+                <div class="resourcesBox" style="height: 50px;">
+                    <span class="stat" style="color: #D8D7D4; ">HP</span>
+                    <input type="hidden" name="attr_totalHP" value="0">
+                    <div>
+                        <input type="text" name="attr_currentHP" value="0" class="inputSummaryHP">
+                        <span class="hpView" class="hpView">/</span>
+                        <span name="attr_totalHP" class="hpView"></span>
+                    </div>
+                </div>
+                <div class="resourcesBox">
+                    <input type="number" name="attr_inspiration" value="0" class="inputSummaryHP">
+                    <span class="stat" style="color: #D8D7D4;">Inspiration</span>
+                    <div class="defendContainer">
+                        <button type="roll" name="roll_defense" value="/r 1d100" style="color: #28414f;"><div class="defendIcon">&#128737;</div></button>
+                    </div>
+                </div>
+                <div class="flexColumn">
+                    <div class="conditionsBox">
+                        <div class="statusBox">
+                            <input type="checkbox" name="attr_burned"></input>
+                            <span style="padding-left: 5px; color: #D8D7D4;">Burned</span>
+                        </div>
+                        <div class="statusBox">
+                            <input type="checkbox" name="attr_paralized"></input>
+                            <span style="padding-left: 5px; color: #D8D7D4;">Paralized</span>
+                        </div>
+                    </div>
+                    <div class="tummy">
+                        <span class="stat" style="color: #D8D7D4;">Belly Points</span>
+                        <div style="display:flex; justify-content: center; padding-left: 15px;">
+                            <input type="number" name="attr_bellyPoints" value="0" class="inputSummaryHP">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flexContainerInLine">
+                <div class="containerSkillAction">
+                    <button type="roll" class="skillButton" name="roll_acrobatics" value="[[1d100+@{baseSpe}+(@{evSpe}/4)]] for Acrobatics"> Acrobatics (Spe)</button>
+                    <button type="roll" class="skillButton" name="roll_arcana" value="[[1d100+@{baseSpDef}+(@{evSpDef}/4)]] for Arcana"> Arcana (Sp.Def)</button>
+                    <button type="roll" class="skillButton" name="roll_athletics" value="[[(1d100+@{finalAtk}/2)]] for Athletics"> Athletics (Atk)</button>
+                    <button type="roll" class="skillButton" name="roll_deception" value="[[1d100+@{baseSpDef}+(@{evSpDef}/4)]]for Deception"> Deception (Sp.Def)</button>
+                    <button type="roll" class="skillButton" name="roll_history" value="[[1d100+@{baseSpAtk}+(@{evSpAtk}/4)]] for History"> History (Sp.Atk)</button>
+                    <button type="roll" class="skillButton" name="roll_insight" value="[[1d100+@{baseDef}+(@{evDef}/4)]] for Insight"> Insight (Def)</button>
+                    <button type="roll" class="skillButton" name="roll_intimidation" value="[[1d100+@{baseSpDef}+(@{evSpDef}/4)]] for Intimidation"> Intimidation (Sp.Def)</button>
+                    <button type="roll" class="skillButton" name="roll_investigation" value="[[1d100+@{baseSpAtk}+(@{evSpAtk}/4)]]for Investigation"> Investigation (Sp.Atk)</button>
+                    <button type="roll" class="skillButton" name="roll_medicine" value="[[1d100+@{baseDef}+(@{evDef}/4)]] for Medicine"> Medicine (Def)</button>
+                    <button type="roll" class="skillButton" name="roll_nature" value="[[1d100+@{baseSpDef}+(@{evSpDef}/4)]] for Nature"> Nature (Sp.Def)</button>
+                    <button type="roll" class="skillButton" name="roll_perception" value="[[1d100+@{baseDef}+(@{evDef}/4)]] for Perception"> Perception (Def)</button>
+                    <button type="roll" class="skillButton" name="roll_performance" value="[[1d100+@{baseSpDef}+(@{evSpDef}/4)]] for Performance"> Performance (Sp.Def)</button>
+                    <button type="roll" class="skillButton" name="roll_persuasion" value="[[1d100+@{baseSpDef}+(@{evSpDef}/4)]] for Persuasion"> Persuasion (Sp.Def)</button>
+                    <button type="roll" class="skillButton" name="roll_religion" value="[[1d100+@{baseSpAtk}+(@{evSpAtk}/4)]] for Religion"> Religion (Sp.Atk)</button>
+                    <button type="roll" class="skillButton" name="roll_stealth" value="[[1d100+@{baseSpe}+(@{evSpe}/4)]] for Stealth"> Stealth (Spe)</button>
+                    <button type="roll" class="skillButton" name="roll_survival" value="[[1d100+@{baseDef}+(@{evDef}/4)]] for Survival"> Survival (Def)</button>
+                    <button type="roll" class="skillButton" name="roll_trickery" value="[[1d100+@{baseSpe}+(@{evSpe}/4)]] for Trickery"> Trickery (Spe)</button>
+                </div>
+                <!--ATTACKS-->
+                <div class="mainContainer">
+                    <div class="attacksContainer">
+                        <div class="attack">
+                            <button type="roll" value=" @{atkk1} with a [[1d100]]% accuracy of @{attkT1}/@{attkC1} typing. @{attkD1}" class="attkBtn">Attack!</button>
+                            <input type="text" name="attr_atkk1" value="Tackle" style="width: 95%;" class="inputAttack">
+                            <div>
+                                <span>Power</span>
+                                <input type="number" name="attr_attkP1" value="40" min="0" step="5" class="inputAttack">
+                                <span>Acc</span>
+                                <input type="number" name="attr_attkA1" value="100" min="0" step="5" class="inputAttack">
+                            </div>
+                            <div>
+                                <span>PP</span>
+                                <input type="number" name="attr_attkPPA1" value="35" min="0" class="inputAttack">
+                                <span>/</span>
+                                <input type="number" name="attr_attkPPT1" value="35" min="0" class="inputAttack">
+                            </div>
+                            <div>
+                                <span>Type</span>
+                                <select name="attr_attkT1" style="width: 50%;" class="inputAttack">
+                                    <option value="normal">Normal</option>
+                                    <option value="fire">Fire</option>
+                                    <option value="fighting">Fighting</option>
+                                    <option value="water">Water</option>
+                                    <option value="flying">Flying</option>
+                                    <option value="grass">Grass</option>
+                                    <option value="poison">Poison</option>
+                                    <option value="electric">Electric</option>
+                                    <option value="ground">Ground</option>
+                                    <option value="phychic">Phychic</option>
+                                    <option value="rock">Rock</option>
+                                    <option value="ice">Ice</option>
+                                    <option value="bug">Bug</option>
+                                    <option value="dragon">Dragon</option>
+                                    <option value="ghost">Ghost</option>
+                                    <option value="dark">Dark</option>
+                                    <option value="steel">Steel</option>
+                                    <option value="fairy">Fairy</option>
+                                </select>
+                            </div>
+                            <div>
+                                <span>Category</span>
+                                <select name="attr_attkC1" style="width: 50%;" class="inputAttack">
+                                    <option value="physical">Physical</option>
+                                    <option value="special">Special</option>
+                                    <option value="status">Status</option>
+                                </select>
+                            </div>
+                            <div>
+                                <span>Description</span>
+                                <textarea name="attr_attkD1" cols="10" wrap="hard" style="width: 90%; height: 100px; resize: none;" class="inputAttack"></textarea>
+                            </div>
+                        </div>
+                        <div class="attack">
+                            <button type="roll" value=" @{atkk2} with a [[1d100]]% accuracy of @{attkT2}/@{attkC2} typing. @{attkD2}" class="attkBtn">Attack!</button>
+                            <input type="text" name="attr_atkk2" value="Tackle" style="width: 95%;" class="inputAttack">
+                            <div>
+                                <span>Power</span>
+                                <input type="number" name="attr_attkP2" value="40" min="0" step="5" class="inputAttack">
+                                <span>Acc</span>
+                                <input type="number" name="attr_attkA2" value="100" min="0" step="5" class="inputAttack">
+                            </div>
+                            <div>
+                                <span>PP</span>
+                                <input type="number" name="attr_attkPPA2" value="35" min="0" class="inputAttack">
+                                <span>/</span>
+                                <input type="number" name="attr_attkPPT2" value="35" min="0" class="inputAttack">
+                            </div>
+                            <div>
+                                <span>Type</span>
+                                <select name="attr_attkT2" style="width: 50%;" class="inputAttack">
+                                    <option value="normal">Normal</option>
+                                    <option value="fire">Fire</option>
+                                    <option value="fighting">Fighting</option>
+                                    <option value="water">Water</option>
+                                    <option value="flying">Flying</option>
+                                    <option value="grass">Grass</option>
+                                    <option value="poison">Poison</option>
+                                    <option value="electric">Electric</option>
+                                    <option value="ground">Ground</option>
+                                    <option value="phychic">Phychic</option>
+                                    <option value="rock">Rock</option>
+                                    <option value="ice">Ice</option>
+                                    <option value="bug">Bug</option>
+                                    <option value="dragon">Dragon</option>
+                                    <option value="ghost">Ghost</option>
+                                    <option value="dark">Dark</option>
+                                    <option value="steel">Steel</option>
+                                    <option value="fairy">Fairy</option>
+                                </select>
+                            </div>
+                            <div>
+                                <span>Category</span>
+                                <select name="attr_attkC2" style="width: 50%;" class="inputAttack">
+                                    <option value="physical">Physical</option>
+                                    <option value="special">Special</option>
+                                    <option value="status">Status</option>
+                                </select>
+                            </div>
+                            <div>
+                                <span>Description</span>
+                                <textarea name="attr_attkD2" cols="10" wrap="hard" style="width: 90%; height: 100px; resize: none;" class="inputAttack"></textarea>
+                            </div>
+                        </div>
+                        <div class="attack">
+                            <button type="roll" value=" @{atkk3} with a [[1d100]]% accuracy of @{attkT3}/@{attkC3} typing. @{attkD3}" class="attkBtn">Attack!</button>
+                            <input type="text" name="attr_atkk3" value="Tackle" style="width: 95%;" class="inputAttack">
+                            <div>
+                                <span>Power</span>
+                                <input type="number" name="attr_attkP3" value="40" min="0" step="5" class="inputAttack">
+                                <span>Acc</span>
+                                <input type="number" name="attr_attkA3" value="100" min="0" step="5" class="inputAttack">
+                            </div>
+                            <div>
+                                <span>PP</span>
+                                <input type="number" name="attr_attkPPA3" value="35" min="0" class="inputAttack">
+                                <span>/</span>
+                                <input type="number" name="attr_attkPPT3" value="35" min="0" class="inputAttack">
+                            </div>
+                            <div>
+                                <span>Type</span>
+                                <select name="attr_attkT3" style="width: 50%;" class="inputAttack">
+                                    <option value="normal">Normal</option>
+                                    <option value="fire">Fire</option>
+                                    <option value="fighting">Fighting</option>
+                                    <option value="water">Water</option>
+                                    <option value="flying">Flying</option>
+                                    <option value="grass">Grass</option>
+                                    <option value="poison">Poison</option>
+                                    <option value="electric">Electric</option>
+                                    <option value="ground">Ground</option>
+                                    <option value="phychic">Phychic</option>
+                                    <option value="rock">Rock</option>
+                                    <option value="ice">Ice</option>
+                                    <option value="bug">Bug</option>
+                                    <option value="dragon">Dragon</option>
+                                    <option value="ghost">Ghost</option>
+                                    <option value="dark">Dark</option>
+                                    <option value="steel">Steel</option>
+                                    <option value="fairy">Fairy</option>
+                                </select>
+                            </div>
+                            <div>
+                                <span>Category</span>
+                                <select name="attr_attkC3" style="width: 50%;" class="inputAttack">
+                                    <option value="physical">Physical</option>
+                                    <option value="special">Special</option>
+                                    <option value="status">Status</option>
+                                </select>
+                            </div>
+                            <div>
+                                <span>Description</span>
+                                <textarea name="attr_attkD3" cols="10" wrap="hard" style="width: 90%; height: 100px; resize: none;" class="inputAttack"></textarea>
+                            </div>
+                        </div>
+                        <div class="attack">
+                            <button type="roll" value=" @{atkk4} with a [[1d100]]% accuracy of @{attkT4}/@{attkC4} typing. @{attkD4}" class="attkBtn">Attack!</button>
+                            <input type="text" name="attr_atkk4" value="Tackle" style="width: 95%;" class="inputAttack">
+                            <div>
+                                <span>Power</span>
+                                <input type="number" name="attr_attkP4" value="40" min="0" step="5" class="inputAttack">
+                                <span>Acc</span>
+                                <input type="number" name="attr_attkA4" value="100" min="0" step="5" class="inputAttack">
+                            </div>
+                            <div>
+                                <span>PP</span>
+                                <input type="number" name="attr_attkPPA4" value="35" min="0" class="inputAttack">
+                                <span>/</span>
+                                <input type="number" name="attr_attkPPT4" value="35" min="0" class="inputAttack">
+                            </div>
+                            <div>
+                                <span>Type</span>
+                                <select name="attr_attkT4" style="width: 50%;" class="inputAttack">
+                                    <option value="normal">Normal</option>
+                                    <option value="fire">Fire</option>
+                                    <option value="fighting">Fighting</option>
+                                    <option value="water">Water</option>
+                                    <option value="flying">Flying</option>
+                                    <option value="grass">Grass</option>
+                                    <option value="poison">Poison</option>
+                                    <option value="electric">Electric</option>
+                                    <option value="ground">Ground</option>
+                                    <option value="phychic">Phychic</option>
+                                    <option value="rock">Rock</option>
+                                    <option value="ice">Ice</option>
+                                    <option value="bug">Bug</option>
+                                    <option value="dragon">Dragon</option>
+                                    <option value="ghost">Ghost</option>
+                                    <option value="dark">Dark</option>
+                                    <option value="steel">Steel</option>
+                                    <option value="fairy">Fairy</option>
+                                </select>
+                            </div>
+                            <div>
+                                <span>Category</span>
+                                <select name="attr_attkC4" style="width: 50%;" class="inputAttack">
+                                    <option value="physical">Physical</option>
+                                    <option value="special">Special</option>
+                                    <option value="status">Status</option>
+                                </select>
+                            </div>
+                            <div>
+                                <span>Description</span>
+                                <textarea name="attr_attkD4" cols="10" wrap="hard" style="width: 90%; height: 100px; resize: none;" class="inputAttack"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--ATTACKS-->
+            </div>
+        </div>
+    </div>
+    
+</div>
